@@ -20,7 +20,7 @@ module.exports = (io)=>{
                 this.sockets.filter((potentialBro)=> potentialBro.dudeID != dude.dudeID)
                 .forEach((bro)=> {
                     dude.emit('bro_connect', bro.dudeID);
-                    bro.emit('bro_connect', dude.dudeID); 
+                    bro.emit('bro_connect', dude.dudeID);
                 });
             },
             message: function(type, data){
@@ -42,12 +42,8 @@ module.exports = (io)=>{
         socket.on('sub', (data)=>{
             socket.gameRoom.message('message', data); 
         });
-        socket.on('dudeInput', (input)=>{ // {0: {left: true}}
+        socket.on('dudeInput', (input)=>{
             socket.gameRoom.message('truth', input); 
-        }
-        }
-        }
-        }
         });
     });
 };
