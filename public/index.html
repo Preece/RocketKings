@@ -8,19 +8,22 @@
 
     <script type="text/javascript" src="Src/EventRouter.js"></script>
     <script type="text/javascript" src="Src/TimerUtil.js"></script>
+    <script type="text/javascript" src="Src/InputController.js"></script>
     <script type="text/javascript" src="Src/FileMap.js"></script>
     <script type="text/javascript" src="Src/Loading.js"></script>        
     <script type="text/javascript" src="Src/Main.js"></script>
-    <script type="text/javascript" src="Src/Player.js"></script>
+    <script type="text/javascript" src="Src/Dude.js"></script>
 
     <script>
 
-            var game = new Phaser.Game(1920, 1080, Phaser.AUTO, "game", Loading, false, false);
+            var game = new Phaser.Game(/*1920*/640, 320/*1080*/, Phaser.AUTO, "game", Loading, false, false);
             var events = new EventRouter();
             var player;
 
             game.state.add('Loading', Loading, true);
             game.state.add('Main', Main, false);
+
+            var DEBUG_MODE = false;
 
 
         </script>

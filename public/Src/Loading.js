@@ -32,11 +32,7 @@ Loading.create = function() {
 
     //game.add.plugin(Phaser.Plugin.Debug);
 
-    game.physics.startSystem(Phaser.Physics.P2JS);
-    game.physics.p2.restitution = 0.8;
-
-    game.time.advancedTiming = true;
-    game.time.desiredFps = 60;
+    inputController = new InputController();
 
     game.state.start('Main', false, false);
 

@@ -1,12 +1,9 @@
-Player = function (game, x, y, name) {
+Dude = function (game, x, y, name) {
 
     Phaser.Sprite.call(this, game, x, y, name);
 
-    game.physics.p2.enable(this);
-    this.body.collideWorldBounds = true;
-
     //load up the animations
-    FileMap.playerAnimations.forEach(function(anim) {
+    FileMap.dudeAnimations.forEach(function(anim) {
         this.animations.add(anim.Name, anim.Frames, anim.Fps, anim.Loop, false);
     }, this);
 
@@ -20,24 +17,24 @@ Player = function (game, x, y, name) {
     //events.subscribe('player_jump', this.Jump, this);
 };
 
-Player.prototype = Object.create(Phaser.Sprite.prototype);
-Player.prototype.constructor = Player;
+Dude.prototype = Object.create(Phaser.Sprite.prototype);
+Dude.prototype.constructor = Dude;
 
-Player.prototype.preStateUpdate = function() {
-
-};
-
-Player.prototype.postStateUpdate = function() {
+Dude.prototype.preStateUpdate = function() {
 
 };
 
-Player.prototype.update = function() {
+Dude.prototype.postStateUpdate = function() {
+
+};
+
+Dude.prototype.update = function() {
     this.preStateUpdate();
     this.state();
     this.postStateUpdate();
 };
 
-Player.prototype.SetDirection = function(dir) {
+Dude.prototype.SetDirection = function(dir) {
     if(this.states.direction !== dir && this.animations.paused === false && !this.InAttackAnim()) {
         this.states.direction = dir;
 
@@ -45,47 +42,47 @@ Player.prototype.SetDirection = function(dir) {
     }
 };
 
-Player.prototype.PlayAnim = function(name) {
+Dude.prototype.PlayAnim = function(name) {
     if(this.animations.currentAnim.name !== name) {
         this.animations.play(name);
     }
 };
 
-Player.prototype.ChangeState = function(newState) {
+Dude.prototype.ChangeState = function(newState) {
     this.state = newState;
 };
 
-Player.prototype.Reset = function() {
+Dude.prototype.Reset = function() {
     
 };
 
 
 ////////////////ACTIONS//////////////////
-Player.prototype.Run = function(params) {
+Dude.prototype.Run = function(params) {
 
 };
 
-Player.prototype.StartStopRun = function(params) {
+Dude.prototype.StartStopRun = function(params) {
    
 };
 
-Player.prototype.Jump = function(params) {
+Dude.prototype.Jump = function(params) {
 
 };
 
-Player.prototype.Hit = function(e, damage, grace_duration) {
+Dude.prototype.Hit = function(e, damage, grace_duration) {
 
 };
 
 //////////////////STATES/////////////////
-Player.prototype.Standing = function() {
+Dude.prototype.Standing = function() {
     this.PlayAnim('stand');
 };
 
-Player.prototype.Running = function() {
+Dude.prototype.Running = function() {
 
 };
 
-Player.prototype.Jumping = function() {
+Dude.prototype.Jumping = function() {
 
 };

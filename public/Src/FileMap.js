@@ -5,7 +5,7 @@ FileMap.Images = [
 ];
 
 FileMap.Atlas = [
-	{ Name: 'Player', File: 'Data/Sprites/Player.json', Img: 'Data/Sprites/Player.png' },
+	{ Name: 'Dude', File: 'Data/Sprites/Player.json', Img: 'Data/Sprites/Player.png' },
 ];
 
 FileMap.Audio = [
@@ -21,7 +21,7 @@ FileMap.Ambient = [
 ];
 
 
-FileMap.playerAnimations = [
+FileMap.dudeAnimations = [
 	{ Name: 'stand', Frames:  ['Stand0000'],  Fps: 1 , Loop: true },
 	{ Name: 'stuff', Frames:  ['Stand0000'],  Fps: 1 , Loop: true },
 ];
