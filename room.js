@@ -18,7 +18,10 @@ module.exports = (io)=>{
             },
             checkForBros: function(dude){
                 this.sockets.filter((potentialBro)=> potentialBro.dudeID != dude.dudeID)
-                .forEach((bro)=> dude.emit('bro_connect', bro.dudeID));
+                .forEach((bro)=> {
+                    dude.emit('bro_connect', bro.dudeID);
+                    bro.emit('bro_connect', dude.dudeID); 
+                });
             },
             message: function(type, data){
                 io.to(this.id).emit(type, data); 
@@ -39,8 +42,12 @@ module.exports = (io)=>{
         socket.on('sub', (data)=>{
             socket.gameRoom.message('message', data); 
         });
-        socket.on('dudeInput', (input)=>{
+        socket.on('dudeInput', (input)=>{ // {0: {left: true}}
             socket.gameRoom.message('truth', input); 
+        }
+        }
+        }
+        }
         });
     });
 };
