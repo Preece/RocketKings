@@ -12,6 +12,13 @@ module.exports = (io)=>{
                 this.sockets.push(socket);
                 socket.gameRoom = this; 
                 socket.join(this.id); 
+                socket.dudeID = this.sockets.length - 1; 
+                socket.emit('dude_connect', socket.dudeID);
+                this.checkForBros(socket); 
+            },
+            checkForBros: function(dude){
+                this.sockets.filter((potentialBro)=> potentialBro.dudeID != dude.dudeID)
+                .forEach((bro)=> dude.emit('bro_connect', bro.dudeID));
             },
             message: function(type, data){
                 io.to(this.id).emit(type, data); 
