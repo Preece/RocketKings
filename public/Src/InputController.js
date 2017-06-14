@@ -5,35 +5,35 @@ InputController = function() {
     this.allowInput = true;
 
     this.binds = {};
-    this.binds.jump       = Phaser.Keyboard.SPACEBAR;
+    this.binds.space       = Phaser.Keyboard.SPACEBAR;
     this.binds.up         = Phaser.Keyboard.W;
-    this.binds.crouch     = Phaser.Keyboard.S;
-    this.binds.runLeft    = Phaser.Keyboard.A;
-    this.binds.runRight   = Phaser.Keyboard.D;
+    this.binds.down     = Phaser.Keyboard.S;
+    this.binds.left    = Phaser.Keyboard.A;
+    this.binds.right   = Phaser.Keyboard.D;
 
     game.input.keyboard.onDownCallback = function(e) {
 
         if(e.repeat) return;
 
         switch(e.keyCode) {
-            case inputController.binds.jump:
-                inputController.OnJump(true);
+            case inputController.binds.space:
+                events.publish('input_space', {pushed: true});
             break;
 
             case inputController.binds.up:
-                inputController.OnUp(true);
+                events.publish('input_up', {pushed: true});
             break;
 
-            case inputController.binds.crouch:
-                inputController.OnDown(true);
+            case inputController.binds.down:
+                events.publish('input_down', {pushed: true});
             break;
 
-            case inputController.binds.runLeft:
-                inputController.OnLeft(true);
+            case inputController.binds.left:
+                events.publish('input_left', {pushed: true});
             break;
 
-            case inputController.binds.runRight:
-                inputController.OnRight(true);
+            case inputController.binds.right:
+                events.publish('input_right', {pushed: true});
             break;
 
         }
@@ -43,24 +43,24 @@ InputController = function() {
 
         switch(e.keyCode) {
             
-            case inputController.binds.jump:
-                inputController.OnJump(false);
+            case inputController.binds.space:
+                events.publish('input_space', {pushed: false});
             break;
 
             case inputController.binds.up:
-                inputController.OnUp(false);
+                events.publish('input_up', {pushed: false});
             break;
 
-            case inputController.binds.crouch:
-                inputController.OnDown(false);
+            case inputController.binds.down:
+                events.publish('input_down', {pushed: false});
             break;
 
-            case inputController.binds.runLeft:
-                inputController.OnLeft(false);
+            case inputController.binds.left:
+                events.publish('input_left', {pushed: false});
             break;
 
-            case inputController.binds.runRight:
-                inputController.OnRight(false);
+            case inputController.binds.right:
+                events.publish('input_right', {pushed: false});
             break;
 
         }
@@ -69,67 +69,4 @@ InputController = function() {
 
 InputController.prototype.Update = function() {
 
-};
-
-
-InputController.prototype.OnJump = function(pressed) {
-
-    if(this.allowInput) {
-        if(pressed) {
-            events.publish('dude_jump', {jump: true});
-        } else {
-            events.publish('dude_jump', {jump: false});
-        }
-    } 
-};
-
-InputController.prototype.OnLeft = function(pressed) {
-
-    if(this.allowInput) {
-
-        if(pressed) {
-            events.publish('dude_run', {run:true, dir:'left'});
-
-        } else {
-            events.publish('dude_run', {run:false, dir: 'left'});
-
-        }
-    }
-};
-
-InputController.prototype.OnRight = function(pressed) {
-
-    if(this.allowInput) {
-
-        if(pressed) {
-            events.publish('dude_run', {run:true, dir:'right'});
-
-        } else {
-            events.publish('dude_run', {run:false, dir: 'right'});
-
-        }
-    }
-};
-
-InputController.prototype.OnUp = function(pressed) {
-
-    if(this.allowInput) {
-        if(pressed) {
-            events.publish('control_up', {pressed: true});
-            
-        } else {
-            events.publish('control_up', {pressed: false});
-        }
-    }
-};
-
-InputController.prototype.OnDown = function(pressed) {
-
-    if(this.allowInput) {
-        if(pressed) {
-            events.publish('dude_crouch', {crouch: true});
-        } else {
-            events.publish('dude_crouch', {crouch: false});
-        }
-    }
 };

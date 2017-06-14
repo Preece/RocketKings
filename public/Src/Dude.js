@@ -10,23 +10,30 @@ Dude = function (game, x, y, name) {
     this.ChangeState(this.Standing);
     
     this.states = {};
+    this.id = -1;
 
     this.timers = new TimerUtil();
 
     events.subscribe('dude_jump', function(params) {
-        if(params.jump) {
-            this.body.moveUp(200);
+        if(params.id === this.id) {
+            if(params.jump) {
+                this.body.moveUp(200);
+            }
         }
     }, this);
 
-    events.subscribe('dude_run', function(params) {
-        if(params.run) {
-            if(params.dir === 'left') {
+    events.subscribe('dude_run_left', function(params) {
+        if(params.id === this.id) {
+            if(params.run) {
                 this.body.moveLeft(200);
+            }
+        }
+    }, this);
 
-            } else {
+    events.subscribe('dude_run_right', function(params) {
+        if(params.id === this.id) {
+            if(params.run) {
                 this.body.moveRight(200);
-                
             }
         }
     }, this);

@@ -12,9 +12,10 @@ Main.create = function() {
     networkController = new NetworkController();
 };
 
-Main.spawnDude = function() {
+Main.spawnDude = function(id) {
 
     dude = new Dude(game, 100, 100, 'Dude');
+    dude.id = id;
     game.add.existing(dude);
 
     game.physics.p2.enable(dude, DEBUG_MODE);
@@ -27,8 +28,9 @@ Main.spawnDude = function() {
     dude.body.fixedRotation = true;
 };
 
-Main.spawnBro = function() {
+Main.spawnBro = function(id) {
     bro = new Dude(game, 100, 100, 'Dude');
+    bro.id = id;
     game.add.existing(bro);
 
     game.physics.p2.enable(bro, DEBUG_MODE);
