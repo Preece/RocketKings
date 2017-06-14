@@ -1,0 +1,23 @@
+{
+  "name": "rocket_kings",
+  "version": "1.0.0",
+  "description": "1v1 Rocket Game",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Preece/RocketKings.git"
+  },
+  "author": "Preece & Jesterswilde",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Preece/RocketKings/issues"
+  },
+  "homepage": "https://github.com/Preece/RocketKings#readme",
+  "dependencies": {
+    "express": "^4.15.3",
+    "socket.io": "^2.0.3"
+  }
+}
