@@ -19,8 +19,8 @@ module.exports = (io)=>{
             checkForCompanions: function(sojourner){
                 this.sojourners.filter((potentialCompanion)=> potentialCompanion.sin != sojourner.sin)
                 .forEach((companion)=> {
-                    sojourner.emit('bro_connect', companion.dudeID);
-                    companion.emit('bro_connect', sojourner.dudeID);
+                    sojourner.emit('bro_connect', companion.sin);
+                    companion.emit('bro_connect', sojourner.sin);
                 });
             },
             message: function(type, data){
