@@ -32,8 +32,6 @@ Loading.create = function() {
 
     //game.add.plugin(Phaser.Plugin.Debug);
 
-    inputController = new InputController();
-
     game.state.start('Main', false, false);
 
 };

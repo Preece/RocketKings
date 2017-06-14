@@ -13,8 +13,23 @@ Dude = function (game, x, y, name) {
 
     this.timers = new TimerUtil();
 
+    events.subscribe('dude_jump', function(params) {
+        if(params.jump) {
+            this.body.moveUp(200);
+        }
+    }, this);
 
-    //events.subscribe('player_jump', this.Jump, this);
+    events.subscribe('dude_run', function(params) {
+        if(params.run) {
+            if(params.dir === 'left') {
+                this.body.moveLeft(200);
+
+            } else {
+                this.body.moveRight(200);
+                
+            }
+        }
+    }, this);
 };
 
 Dude.prototype = Object.create(Phaser.Sprite.prototype);

@@ -8,21 +8,37 @@ Main.create = function() {
     game.time.advancedTiming = true;
     game.time.desiredFps = 60;
 
-    player = new Dude(game, 100, 100, 'Dude');
-    game.add.existing(player);
+    inputController = new InputController();
+    networkController = new NetworkController();
+};
 
-    game.physics.p2.enable(player, DEBUG_MODE);
-    player.body.clearShapes();
-    player.body.addRectangle(20, 50);
+Main.spawnDude = function() {
 
-    player.body.collideWorldBounds = true;
-    player.body.setZeroDamping();
-    player.body.setZeroVelocity();
-    player.body.fixedRotation = true;
+    dude = new Dude(game, 100, 100, 'Dude');
+    game.add.existing(dude);
 
-    events.subscribe('player_jump', function() {
-        player.body.moveUp(200);
-    }, this);
+    game.physics.p2.enable(dude, DEBUG_MODE);
+    dude.body.clearShapes();
+    dude.body.addRectangle(20, 50);
+
+    dude.body.collideWorldBounds = true;
+    dude.body.setZeroDamping();
+    dude.body.setZeroVelocity();
+    dude.body.fixedRotation = true;
+};
+
+Main.spawnBro = function() {
+    bro = new Dude(game, 100, 100, 'Dude');
+    game.add.existing(bro);
+
+    game.physics.p2.enable(bro, DEBUG_MODE);
+    bro.body.clearShapes();
+    bro.body.addRectangle(20, 50);
+
+    bro.body.collideWorldBounds = true;
+    bro.body.setZeroDamping();
+    bro.body.setZeroVelocity();
+    bro.body.fixedRotation = true;
 };
 
 Main.update = function() {

@@ -18,7 +18,6 @@ InputController = function() {
         switch(e.keyCode) {
             case inputController.binds.jump:
                 inputController.OnJump(true);
-                console.log('wuxxx')
             break;
 
             case inputController.binds.up:
@@ -77,9 +76,9 @@ InputController.prototype.OnJump = function(pressed) {
 
     if(this.allowInput) {
         if(pressed) {
-            events.publish('player_jump', {jump: true});
+            events.publish('dude_jump', {jump: true});
         } else {
-            events.publish('player_jump', {jump: false});
+            events.publish('dude_jump', {jump: false});
         }
     } 
 };
@@ -89,10 +88,10 @@ InputController.prototype.OnLeft = function(pressed) {
     if(this.allowInput) {
 
         if(pressed) {
-            events.publish('player_run', {run:true, dir:'left'});
+            events.publish('dude_run', {run:true, dir:'left'});
 
         } else {
-            events.publish('player_run', {run:false, dir: 'left'});
+            events.publish('dude_run', {run:false, dir: 'left'});
 
         }
     }
@@ -103,10 +102,10 @@ InputController.prototype.OnRight = function(pressed) {
     if(this.allowInput) {
 
         if(pressed) {
-            events.publish('player_run', {run:true, dir:'right'});
+            events.publish('dude_run', {run:true, dir:'right'});
 
         } else {
-            events.publish('player_run', {run:false, dir: 'right'});
+            events.publish('dude_run', {run:false, dir: 'right'});
 
         }
     }
@@ -128,9 +127,9 @@ InputController.prototype.OnDown = function(pressed) {
 
     if(this.allowInput) {
         if(pressed) {
-            events.publish('player_crouch', {crouch: true});
+            events.publish('dude_crouch', {crouch: true});
         } else {
-            events.publish('player_crouch', {crouch: false});
+            events.publish('dude_crouch', {crouch: false});
         }
     }
 };
