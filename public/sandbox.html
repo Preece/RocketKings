@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <script src="/socket.io/socket.io.js"></script>
+</head>
+<body>
+
+<input type="text" id="words">
+<button id="sub" onClick="sub">submit</button>
+<ul id="home">
+</ul>
+<script>
+document.addEventListener('DOMContentLoaded', ()=>{
+    const socket = io();
+    const words = document.getElementById("words"); 
+    const sub = document.getElementById("sub"); 
+    const home = document.getElementById("home"); 
+    socket.on('connect', ()=>console.log("connected"));
+    sub.addEventListener("click",()=>{
+        console.log("clicked"); 
+        socket.emit('sub', words.value);
+        words.value = ""; 
+    });
+    socket.on('message', (message)=>{
+        const li = document.createElement('li'); 
+        li.innerHTML = message; 
+        home.append(li); 
+    });
+  socket.on('disconnect', function(){});
+
+
+
+}, false);
+</script>
+</body>
+</html>
