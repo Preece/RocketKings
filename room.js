@@ -1,26 +1,26 @@
 module.exports = (io)=>{
-    let roomID = 0; 
-    let rooms = []; 
-    let createRoom = (id)=>{
-        roomID++; 
+    let roadID = 0; 
+    let roads = []; 
+    let createRoad = (id)=>{
+        roadID++; 
         return {
-            isFull: function(){ return this.sockets.length >= this.capacity;},
+            isFull: function(){ return this.sojourners.length >= this.capacity;},
             capacity: 2,
-            sockets: [],
-            id : roomID,
-            addSocket: function(socket) {
-                this.sockets.push(socket);
-                socket.gameRoom = this; 
-                socket.join(this.id); 
-                socket.dudeID = this.sockets.length - 1; 
-                socket.emit('dude_connect', socket.dudeID);
-                this.checkForBros(socket); 
+            sojourners: [],
+            id : roadID,
+            addSojourner: function(sojourner) {
+                this.sojourners.push(sojourner);
+                sojourner.road = this; 
+                sojourner.join(this.id); 
+                sojourner.sin = this.sojourners.length - 1; 
+                sojourner.emit('dude_connect', sojourner.sin);
+                this.checkForCompanions(sojourner); 
             },
-            checkForBros: function(dude){
-                this.sockets.filter((potentialBro)=> potentialBro.dudeID != dude.dudeID)
-                .forEach((bro)=> {
-                    dude.emit('bro_connect', bro.dudeID);
-                    bro.emit('bro_connect', dude.dudeID);
+            checkForCompanions: function(sojourner){
+                this.sojourners.filter((potentialCompanion)=> potentialCompanion.sin != sojourner.sin)
+                .forEach((companion)=> {
+                    sojourner.emit('bro_connect', companion.dudeID);
+                    companion.emit('bro_connect', sojourner.dudeID);
                 });
             },
             message: function(type, data){
@@ -28,22 +28,22 @@ module.exports = (io)=>{
             }
         };
     };
-    let addSocket = (socket)=>{
-        if(!rooms.length || rooms[rooms.length - 1].isFull()){
-            const room = createRoom(); 
-            room.addSocket(socket); 
-            rooms.push(room); 
+    let addSojourner = (sojourner)=>{
+        if(!roads.length || roads[roads.length - 1].isFull()){
+            const road = createRoad(); 
+            road.addSojourner(sojourner); 
+            roads.push(road); 
         }else{
-            rooms[rooms.length - 1].addSocket(socket); 
+            roads[roads.length - 1].addSojourner(sojourner); 
         }
     };
-    io.on('connection', (socket)=>{
-        addSocket(socket); 
-        socket.on('sub', (data)=>{
-            socket.gameRoom.message('message', data); 
+    io.on('connection', (sojourner)=>{
+        addSojourner(sojourner); 
+        sojourner.on('sub', (data)=>{
+            sojourner.road.message('message', data); 
         });
-        socket.on('dudeInput', (input)=>{
-            socket.gameRoom.message('truth', input); 
+        sojourner.on('dudeInput', (input)=>{
+            sojourner.road.message('truth', input); 
         });
     });
 };
