@@ -5,7 +5,7 @@ FileMap.Images = [
 ];
 
 FileMap.Atlas = [
-	//{ Name: 'Frauki', File: 'Data/Sprites/Frauki.json', Img: 'Data/Sprites/Frauki.png' },
+	{ Name: 'Player', File: 'Data/Sprites/Player.json', Img: 'Data/Sprites/Player.png' },
 ];
 
 FileMap.Audio = [
@@ -18,4 +18,10 @@ FileMap.Music = [
 
 FileMap.Ambient = [
 	//{ Name: 'surface_wind', File: 'Data/Sfx/surface_wind.ogg', Volume: 0.50, Loop: true },
+];
+
+
+FileMap.playerAnimations = [
+	{ Name: 'stand', Frames:  ['Stand0000'],  Fps: 1 , Loop: true },
+	{ Name: 'stuff', Frames:  ['Stand0000'],  Fps: 1 , Loop: true },
 ];

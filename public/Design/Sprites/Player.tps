@@ -6,7 +6,7 @@
         <key>texturePackerVersion</key>
         <string>4.3.3</string>
         <key>fileName</key>
-        <string>D:/gamedev/Frauki/Design/Sprites/Frauki/Frauki.tps</string>
+        <string>D:/gamedev/RocketKings/public/Design/Sprites/Player.tps</string>
         <key>autoSDSettings</key>
         <array>
             <struct type="AutoSDSettings">
@@ -36,7 +36,7 @@
         <key>dataFormat</key>
         <string>json</string>
         <key>textureFileName</key>
-        <filename>../../../Data/Sprites/Frauki.png</filename>
+        <filename>../../Data/Sprites/Player.png</filename>
         <key>flipPVR</key>
         <false/>
         <key>pvrCompressionQuality</key>
@@ -150,7 +150,7 @@
             <key>data</key>
             <struct type="DataFile">
                 <key>name</key>
-                <filename>../../../Data/Sprites/Frauki.json</filename>
+                <filename>../../Data/Sprites/Player.json</filename>
             </struct>
         </map>
         <key>multiPack</key>
