@@ -2,8 +2,27 @@
 <html>
 <head>
     <title>Rocket Kings</title>
+
+    <script type="text/javascript" src="Src/Plugins/phaser.min.js"></script>
+    <script type="text/javascript" src="Src/Plugins/phaser-debug.js"></script>
+
+    <script type="text/javascript" src="Src/EventRouter.js"></script>
+    <script type="text/javascript" src="Src/FileMap.js"></script>
+    <script type="text/javascript" src="Src/Loading.js"></script>        
+    <script type="text/javascript" src="Src/Main.js"></script>
+
+    <script>
+
+            var game = new Phaser.Game(1920, 1080, Phaser.AUTO, "game", Loading, false, false);
+            var events = new EventRouter();
+
+            game.state.add('Loading', Loading, true);
+            game.state.add('Main', Main, false);
+
+
+        </script>
+
 </head>
 <body>
-<blink> boom </blink>
 </body>
 </html>

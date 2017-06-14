@@ -1,1 +1,10 @@
 node_modules/
+*.exe
+*.sublime-project
+*.sublime-workspace
+*.ini
+*.log
+Thumbs.db
+frauki.cfg
+*.cfg
+Working/
