@@ -46,7 +46,6 @@ Dude = function (game, x, y, name) {
 
     events.subscribe('update_geom', function(params) {
         if(params.id === this.id) {
-            console.log(params)
             this.serverGeom.setTo(params.x * 20, params.y * -20, params.width * 20, params.height * 20);
         }
     }, this);

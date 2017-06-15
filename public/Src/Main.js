@@ -21,6 +21,7 @@ Main.create = function() {
 
     inputController = new InputController();
     networkController = new NetworkController();
+    rocketController = new RocketController();
 
     var timeStep = 1 / 60;
 
@@ -61,5 +62,5 @@ Main.update = function() {
 };
 
 Main.render = function() {
-    if(!!dude) game.debug.geom( dude.serverGeom, 'rgba(255,0,0,0.5)' ) ;
+    //if(!!dude) game.debug.geom( dude.serverGeom, 'rgba(255,0,0,0.5)' ) ;
 };
