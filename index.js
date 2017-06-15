@@ -3,6 +3,7 @@ const app = express();
 const server = require('http').createServer(app);
 const io = require('socket.io')(server);
 require('./room')(io);
+require('./world');
     
 /*
 io.on('connection', (socket)=> {

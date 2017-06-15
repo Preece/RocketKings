@@ -1,46 +1,42 @@
 var Main = new Phaser.State();
 
 Main.create = function() {
-    game.physics.startSystem(Phaser.Physics.P2JS);
-    game.physics.p2.restitution = 0;
-    game.physics.p2.gravity.y = 800;
+
+    this.world = new p2.World({
+        gravity: [0, -80]
+    });
+
+    this.world.defaultContactMaterial.friction = 0.5;
+    this.world.setGlobalStiffness(1e5);
+
+    planeShape = new p2.Plane();
+    planeBody = new p2.Body({
+      position:[0,-15]
+    });
+    planeBody.addShape(planeShape);
+    this.world.addBody(planeBody);
 
     game.time.advancedTiming = true;
     game.time.desiredFps = 60;
 
     inputController = new InputController();
     networkController = new NetworkController();
+
+    var timeStep = 1 / 60;
+
+    setInterval(function(){
+
+        Main.world.step(timeStep);
+     
+    }, 1000 * timeStep);
 };
 
 Main.spawnDude = function(id) {
 
-    dude = new Dude(game, 100, 100, 'Dude');
-    dude.id = id;
-    game.add.existing(dude);
-
-    game.physics.p2.enable(dude, DEBUG_MODE);
-    dude.body.clearShapes();
-    dude.body.addRectangle(20, 50);
-
-    dude.body.collideWorldBounds = true;
-    dude.body.setZeroDamping();
-    dude.body.setZeroVelocity();
-    dude.body.fixedRotation = true;
-};
-
-Main.spawnBro = function(id) {
-    bro = new Dude(game, 100, 100, 'Dude');
-    bro.id = id;
-    game.add.existing(bro);
-
-    game.physics.p2.enable(bro, DEBUG_MODE);
-    bro.body.clearShapes();
-    bro.body.addRectangle(20, 50);
-
-    bro.body.collideWorldBounds = true;
-    bro.body.setZeroDamping();
-    bro.body.setZeroVelocity();
-    bro.body.fixedRotation = true;
+    var duder = new Dude(game, 0, 0, 'Dude');
+    duder.id = id;
+    game.add.existing(duder);
+    return duder;
 };
 
 Main.update = function() {
@@ -65,5 +61,5 @@ Main.update = function() {
 };
 
 Main.render = function() {
-
+    if(!!dude) game.debug.geom( dude.serverGeom, 'rgba(255,0,0,0.5)' ) ;
 };
