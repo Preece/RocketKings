@@ -21,15 +21,13 @@
 
             var game = new Phaser.Game(/*1920*/640, 320/*1080*/, Phaser.AUTO, "game", Loading, false, false);
             var events = new EventRouter();
-            var dude, bro;
+            var dude = null, bro = null;
 
             var inputController;
             var networkController;
 
             game.state.add('Loading', Loading, true);
             game.state.add('Main', Main, false);
-
-            game.stage.disableVisibilityChange = true;
 
             var DEBUG_MODE = false;
 

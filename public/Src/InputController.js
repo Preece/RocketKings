@@ -18,6 +18,7 @@ InputController = function() {
         switch(e.keyCode) {
             case inputController.binds.space:
                 events.publish('input_space', {pushed: true});
+                events.publish('dude_jump', {id: dude.id, jump: true});
             break;
 
             case inputController.binds.up:
@@ -30,10 +31,13 @@ InputController = function() {
 
             case inputController.binds.left:
                 events.publish('input_left', {pushed: true});
+                events.publish('dude_run_left', {id: dude.id, run: true});
             break;
 
             case inputController.binds.right:
                 events.publish('input_right', {pushed: true});
+                events.publish('dude_run_right', {id: dude.id, run: true});
+
             break;
 
         }
@@ -45,6 +49,8 @@ InputController = function() {
             
             case inputController.binds.space:
                 events.publish('input_space', {pushed: false});
+                events.publish('dude_jump', {id: dude.id, jump: false});
+
             break;
 
             case inputController.binds.up:
@@ -57,10 +63,14 @@ InputController = function() {
 
             case inputController.binds.left:
                 events.publish('input_left', {pushed: false});
+                events.publish('dude_run_left', {id: dude.id, run: false});
+
             break;
 
             case inputController.binds.right:
                 events.publish('input_right', {pushed: false});
+                events.publish('dude_run_right', {id: dude.id, run: false});
+
             break;
 
         }

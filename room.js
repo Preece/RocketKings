@@ -1,3 +1,5 @@
+const world = require('./world');
+
 module.exports = (io)=>{
     let roadID = 0; 
     let roads = []; 
@@ -8,13 +10,16 @@ module.exports = (io)=>{
             capacity: 2,
             sojourners: [],
             id : roadID,
+            world: world.createWorld(io, roadID),
             addSojourner: function(sojourner) {
                 this.sojourners.push(sojourner);
                 sojourner.road = this; 
                 sojourner.join(this.id); 
                 sojourner.sin = this.sojourners.length - 1; 
                 sojourner.emit('dude_connect', sojourner.sin);
-                this.checkForCompanions(sojourner); 
+                this.checkForCompanions(sojourner);
+
+                world.addDude(this.world, sojourner.sin); 
             },
             checkForCompanions: function(sojourner){
                 this.sojourners.filter((potentialCompanion)=> potentialCompanion.sin != sojourner.sin)
@@ -43,6 +48,9 @@ module.exports = (io)=>{
             sojourner.road.message('message', data); 
         });
         sojourner.on('dudeInput', (input)=>{
+
+            //convert inputs to movements on the server
+            
             sojourner.road.message('truth', input); 
         });
     });

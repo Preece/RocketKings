@@ -5,14 +5,20 @@ NetworkController = function() {
 		console.log('Dude Connected:', resp);
 
 		//spawn dude
-		Main.spawnDude(resp);
+		if(!dude) dude = Main.spawnDude(resp);
 	});
 
 	this.socket.on('bro_connect', function(resp) {
-		console.log('Bro Connected:', resp);
+		console.log('Bro Connected:', resp);  
 
 		//spawn bro
-		Main.spawnBro(resp);
+		//bro = Main.spawnDude(resp);
+	});
+
+	this.socket.on('physics_update', function(resp) {
+		for(var i = 0; i < resp.length; i++) {
+			events.publish('update_geom', resp[i]);
+		}
 	});
 
 	
@@ -34,13 +40,15 @@ NetworkController = function() {
     this.socket.on('truth', function(truth) {
 		console.log('Truth:', truth);
 
-		if(!!truth.jump) {
+		if(truth.id === dude.id) return;
+
+		if(truth.jump !== undefined) {
 			events.publish('dude_jump', {id: truth.id, jump: truth.jump});
 
-		} else if(!!truth.left) {
+		} else if(truth.left !== undefined) {
 			events.publish('dude_run_left', {id: truth.id, run: truth.left});
 
-		} else if(!!truth.right) {
+		} else if(truth.right !== undefined) {
 			events.publish('dude_run_right', {id: truth.id, run: truth.right});
 
 		}
