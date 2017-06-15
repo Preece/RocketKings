@@ -49,7 +49,6 @@ InputController = function() {
             
             case inputController.binds.space:
                 events.publish('input_space', {pushed: false});
-                events.publish('dude_jump', {id: dude.id, jump: false});
 
             break;
 
@@ -63,13 +62,11 @@ InputController = function() {
 
             case inputController.binds.left:
                 events.publish('input_left', {pushed: false});
-                events.publish('dude_run_left', {id: dude.id, run: false});
 
             break;
 
             case inputController.binds.right:
                 events.publish('input_right', {pushed: false});
-                events.publish('dude_run_right', {id: dude.id, run: false});
 
             break;
 

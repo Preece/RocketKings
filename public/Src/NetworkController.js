@@ -17,7 +17,6 @@ NetworkController = function() {
 
 	this.socket.on('physics_update', function(resp) {
 		for(var i = 0; i < resp.length; i++) {
-			events.publish('update_geom', resp[i]);
 		}
 	});
 

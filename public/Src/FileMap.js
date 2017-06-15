@@ -22,6 +22,6 @@ FileMap.Ambient = [
 
 
 FileMap.dudeAnimations = [
-	{ Name: 'stand', Frames:  ['Stand0000'],  Fps: 1 , Loop: true },
-	{ Name: 'stuff', Frames:  ['Stand0000'],  Fps: 1 , Loop: true },
+	{ Name: 'stand', Frames:  ['dudebro_idle_1'],  Fps: 1 , Loop: true },
+	{ Name: 'stuff', Frames:  ['dudebro_idle_1'],  Fps: 1 , Loop: true },
 ];

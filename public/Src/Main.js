@@ -2,19 +2,9 @@ var Main = new Phaser.State();
 
 Main.create = function() {
 
-    this.world = new p2.World({
-        gravity: [0, -80]
-    });
-
-    this.world.defaultContactMaterial.friction = 0.5;
-    this.world.setGlobalStiffness(1e5);
-
-    planeShape = new p2.Plane();
-    planeBody = new p2.Body({
-      position:[0,-15]
-    });
-    planeBody.addShape(planeShape);
-    this.world.addBody(planeBody);
+    game.physics.startSystem(Phaser.Physics.P2JS);
+    game.physics.p2.restitution = 0;
+    game.physics.p2.gravity.y = 800;
 
     game.time.advancedTiming = true;
     game.time.desiredFps = 60;
@@ -22,22 +12,23 @@ Main.create = function() {
     inputController = new InputController();
     networkController = new NetworkController();
     rocketController = new RocketController();
-
-    var timeStep = 1 / 60;
-
-    setInterval(function(){
-
-        Main.world.step(timeStep);
-     
-    }, 1000 * timeStep);
 };
 
 Main.spawnDude = function(id) {
 
-    var duder = new Dude(game, 0, 0, 'Dude');
-    duder.id = id;
-    game.add.existing(duder);
-    return duder;
+    dude = new Dude(game, 100, 100, 'Dude');
+    dude.id = id;
+    game.add.existing(dude);
+
+    game.physics.p2.enable(dude, DEBUG_MODE);
+    dude.body.setRectangle(40, 80, -5, 0);
+
+    dude.body.collideWorldBounds = true;
+    dude.body.setZeroDamping();
+    dude.body.setZeroVelocity();
+    dude.body.fixedRotation = true;
+
+    return dude;
 };
 
 Main.update = function() {

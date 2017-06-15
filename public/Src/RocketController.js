@@ -4,7 +4,7 @@ RocketController = function() {
 
 RocketController.prototype.CreateRocket = function(orig, vec) {
 
-	var rocket = new Rocket(game, orig.x - 70, orig.y - 90, 'Dude');
+	var rocket = new Rocket(game, orig.x, orig.y, 'Dude');
 	game.add.existing(rocket);
 
 	rocket.Launch(vec);
