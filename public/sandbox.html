@@ -10,9 +10,74 @@
 <button id="sub" onClick="sub">submit</button>
 <ul id="home">
 </ul>
+
+<canvas width="640" height="320" id="myCanvas"></canvas>
+<script>
+      const socket = io();
+      const scale = 20; 
+      var canvas, ctx, w, h,
+          world, boxBody, planeBody;
+
+      init();
+      let boxes = []; 
+      function init(){
+
+        // Init canvas
+        canvas = document.getElementById("myCanvas");
+        w = canvas.width;
+        h = canvas.height;
+
+        ctx = canvas.getContext("2d");
+        ctx.lineWidth = 0.05;
+      }
+
+      function drawbox(x,y, width, height){
+        y = h - y; 
+        ctx.rect(100 + x,y - height, width , height); 
+        ctx.fill(); 
+        /*ctx.beginPath();
+        ctx.save();
+        ctx.translate(x, y);        // Translate to the center of the box
+        //ctx.rotate(boxBody.angle);  // Rotate to the box body frame
+        ctx.rect(-width, -height, width, height);
+        ctx.stroke();
+        ctx.restore();*/
+      }
+
+      function drawPlane(y){
+        y= h - y;
+        ctx.rect(0, y, w, 10);
+        ctx.fill(); 
+      }
+
+      function render(){
+        // Clear the canvas
+        ctx.save();
+        ctx.beginPath();
+        ctx.setTransform(1, 0, 0, 1, 0, 0);
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.restore();
+        boxes.forEach((box)=> drawbox(box.x, box.y, box.width, box.height));
+        drawPlane(2); 
+        console.log('rendering', boxes); 
+        // Transform the canvas
+        // Note that we need to flip the y axis since Canvas pixel coordinates
+        // goes from top to bottom, while physics does the opposite.
+        //ctx.translate(w/2, h/2);  // Translate to the center
+        //ctx.scale(50, -50);       // Zoom in and flip y axis
+
+        // Restore transform
+      }
+    socket.on('p2', (data)=>{
+            data.forEach((box)=> Object.keys(box).forEach((key)=>box[key]*=scale));
+            boxes = data; 
+            render();   
+    }); 
+    render();
+    </script>
+
 <script>
 document.addEventListener('DOMContentLoaded', ()=>{
-    const socket = io();
     const words = document.getElementById("words"); 
     const sub = document.getElementById("sub"); 
     const home = document.getElementById("home"); 
@@ -25,7 +90,7 @@ document.addEventListener('DOMContentLoaded', ()=>{
     socket.on('message', (message)=>{
         const li = document.createElement('li'); 
         li.innerHTML = message; 
-        home.append(li); 
+        home.append(li);    
     });
   socket.on('disconnect', function(){});
 
