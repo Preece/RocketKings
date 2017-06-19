@@ -12,6 +12,7 @@ Main.create = function() {
     inputController = new InputController();
     networkController = new NetworkController();
     rocketController = new RocketController();
+    effectsController = new EffectsController();
 };
 
 Main.spawnDude = function(id) {

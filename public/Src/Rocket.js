@@ -21,10 +21,25 @@ Rocket.prototype.update = function() {
 };
 
 Rocket.prototype.Launch = function(vec) {
-	vec.setMagnitude(10);
+	vec.setMagnitude(1500);
 
 	this.xVel = vec.x * -1;
 	this.yVel = vec.y * -1;
 
+	this.body.velocity.x = this.xVel;
+	this.body.velocity.y = this.yVel;
+
 	//this.rotation = Math.atan2(vec.x, vec.y);
 };
+
+Rocket.prototype.Collide = function(body, bodyB, shapeA, shapeB, equation) {
+
+    this.pendingDestroy = true;
+    effectsController.Explosion(this.body);
+
+    //knock back the dude and the bro when it explodes
+    if(!!dude) {
+    	dude.body.velocity.y -= 200;
+    }
+
+}
