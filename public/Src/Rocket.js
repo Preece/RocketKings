@@ -34,12 +34,17 @@ Rocket.prototype.Launch = function(vec) {
 
 Rocket.prototype.Collide = function(body, bodyB, shapeA, shapeB, equation) {
 
-    this.pendingDestroy = true;
-    effectsController.Explosion(this.body);
+console.log(body, bodyB)
 
-    //knock back the dude and the bro when it explodes
-    if(!!dude) {
-    	dude.body.velocity.y -= 200;
-    }
+	if(body === null) {
+	    this.pendingDestroy = true;
+	    effectsController.Explosion(this.body);
+
+	    //knock back the dude and the bro when it explodes
+	    if(!!dude) {
+	    	dude.PushBack(this.body);
+	    }
+		
+	}
 
 }

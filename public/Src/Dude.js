@@ -102,6 +102,21 @@ Dude.prototype.OnGround = function() {
 
 };
 
+Dude.prototype.PushBack = function(source) {
+    var vec = new Phaser.Point(this.x - source.x, this.y - source.y);
+
+    var dist = vec.getMagnitude();
+
+    vec = vec.normalize();
+
+    if(dist < 100) {
+        vec.setMagnitude(400);
+        this.body.velocity.x += vec.x;
+        this.body.velocity.y += vec.y;
+    }
+
+};
+
 
 ////////////////ACTIONS//////////////////
 Dude.prototype.Run = function(params) {
