@@ -10,15 +10,6 @@ Rocket = function(game, x, y, name) {
 	this.yVel = 0;
 
 	this.anchor.setTo(0.5);
-
-    rocketShape = new p2.Box({ width: 0.5, height: 0.5 });
-    this.rocketBody = new p2.Body({
-      mass: 1,
-      fixedRotation: true
-    });
-    this.rocketBody.addShape(rocketShape);
-     
-    Main.world.addBody(this.rocketBody);
 };
 
 Rocket.prototype = Object.create(Phaser.Sprite.prototype);

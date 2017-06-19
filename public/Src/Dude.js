@@ -16,7 +16,7 @@ Dude = function (game, x, y, name) {
 
     events.subscribe('dude_jump', function(params) {
         if(params.id === this.id) {
-            if(params.jump && this.CanJump()) {
+            if(params.jump && this.OnGround()) {
                 this.body.moveUp(200);
             }
         }
@@ -81,7 +81,7 @@ Dude.prototype.Reset = function() {
     
 };
 
-Dude.prototype.CanJump = function() {
+Dude.prototype.OnGround = function() {
 
     var yAxis = p2.vec2.fromValues(0, 1);
     var result = false;

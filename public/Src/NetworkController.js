@@ -39,8 +39,6 @@ NetworkController = function() {
     this.socket.on('truth', function(truth) {
 		console.log('Truth:', truth);
 
-		if(truth.id === dude.id) return;
-
 		if(truth.jump !== undefined) {
 			events.publish('dude_jump', {id: truth.id, jump: truth.jump});
 
