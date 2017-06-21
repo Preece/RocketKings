@@ -34,8 +34,6 @@ Rocket.prototype.Launch = function(vec) {
 
 Rocket.prototype.Collide = function(body, bodyB, shapeA, shapeB, equation) {
 
-console.log(body, bodyB)
-
 	if(body === null) {
 	    this.pendingDestroy = true;
 	    effectsController.Explosion(this.body);

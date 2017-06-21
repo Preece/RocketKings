@@ -106,11 +106,16 @@ Dude.prototype.PushBack = function(source) {
     var vec = new Phaser.Point(this.x - source.x, this.y - source.y);
 
     var dist = vec.getMagnitude();
-
     vec = vec.normalize();
 
+    var force = game.math.catmullRomInterpolation([1, 0.9, 0.65, 0.4, 0.3], game.math.clamp(dist / 200, 0, 1));
+    
+    console.log(force);
+
+    vec.setMagnitude(force * 500);
+
     if(dist < 100) {
-        vec.setMagnitude(400);
+        //vec.setMagnitude(400);
         this.body.velocity.x += vec.x;
         this.body.velocity.y += vec.y;
     }
