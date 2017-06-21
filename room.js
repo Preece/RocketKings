@@ -1,31 +1,30 @@
 const world = require('./world');
 
 module.exports = (io)=>{
-    let roadID = 0; 
-    let roads = []; 
-    let createRoad = (id)=>{
-        roadID++; 
+    let roomID = 0; 
+    let rooms = []; 
+    let createRoom = (id)=>{
+        roomID++; 
         return {
-            isFull: function(){ return this.sojourners.length >= this.capacity;},
+            isFull: function(){ return this.sockets.length >= this.capacity;},
             capacity: 2,
-            sojourners: [],
-            id : roadID,
-            world: world.createWorld(io, roadID),
-            addSojourner: function(sojourner) {
-                this.sojourners.push(sojourner);
-                sojourner.road = this; 
-                sojourner.join(this.id); 
-                sojourner.sin = this.sojourners.length - 1; 
-                sojourner.emit('dude_connect', sojourner.sin);
-                this.checkForCompanions(sojourner);
-
-                world.addDude(this.world, sojourner.sin); 
+            sockets: [],
+            id : roomID,
+            world: world.createWorld(io, roomID),
+            addSocket: function(socket) {
+                this.sockets.push(socket);
+                socket.room = this; 
+                socket.join(this.id); 
+                socket.dudeID = this.sockets.length - 1; 
+                socket.emit('dude_connect', dude.dudeID);
+                this.checkForBros(socket);
+                world.addSocket(this.world, dude.dudeID); 
             },
-            checkForCompanions: function(sojourner){
-                this.sojourners.filter((potentialCompanion)=> potentialCompanion.sin != sojourner.sin)
-                .forEach((companion)=> {
-                    sojourner.emit('bro_connect', companion.sin);
-                    companion.emit('bro_connect', sojourner.sin);
+            checkForBros: function(dude){
+                this.sockets.filter((potentialBros)=> potentialBros.dudeID != dude.dudeID)
+                .forEach((bro)=> {
+                    dude.emit('bro_connect', bro.dudeID);
+                    bro.emit('bro_connect', dude.dudeID);
                 });
             },
             message: function(type, data){
@@ -33,25 +32,25 @@ module.exports = (io)=>{
             }
         };
     };
-    let addSojourner = (sojourner)=>{
-        if(!roads.length || roads[roads.length - 1].isFull()){
-            const road = createRoad(); 
-            road.addSojourner(sojourner); 
-            roads.push(road); 
+    let addSocket = (dude)=>{
+        if(!rooms.length || rooms[rooms.length - 1].isFull()){
+            const road = createRoom(); 
+            road.addSocket(dude); 
+            rooms.push(road); 
         }else{
-            roads[roads.length - 1].addSojourner(sojourner); 
+            rooms[rooms.length - 1].addSocket(dude); 
         }
     };
-    io.on('connection', (sojourner)=>{
-        addSojourner(sojourner); 
-        sojourner.on('sub', (data)=>{
-            sojourner.road.message('message', data); 
+    io.on('connection', (socket)=>{
+        addSocket(socket); 
+        socket.on('sub', (data)=>{
+            socket.room.message('message', data); 
         });
-        sojourner.on('dudeInput', (input)=>{
+        socket.on('dudeInput', (input)=>{
 
             //convert inputs to movements on the server
             
-            sojourner.road.message('truth', input); 
+            dude.room.message('truth', input); 
         });
     });
 };
