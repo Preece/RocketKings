@@ -4,7 +4,7 @@ Main.create = function() {
 
     game.physics.startSystem(Phaser.Physics.P2JS);
     game.physics.p2.restitution = 0;
-    game.physics.p2.gravity.y = 600;
+    game.physics.p2.gravity.y = 350;
 
     game.time.advancedTiming = true;
     game.time.desiredFps = 60;
