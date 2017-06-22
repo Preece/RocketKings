@@ -1,5 +1,5 @@
 RocketController = function() {
-
+    
 };
 
 RocketController.prototype.CreateRocket = function(orig, vec) {

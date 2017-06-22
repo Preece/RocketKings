@@ -74,13 +74,18 @@ InputController = function() {
     };
 
     game.input.onDown.add(function(e) {
-        //console.log(e);
-        var rot = Math.atan2();
 
-        var vec = new Phaser.Point(dude.x - game.input.mousePointer.x, dude.y - game.input.mousePointer.y);
-        vec = vec.normalize();
+        if(this.timers.TimerUp('rocket_rest')) {
+            //console.log(e);
+            var rot = Math.atan2();
 
-        rocketController.CreateRocket({x: dude.x, y: dude.y}, vec);
+            var vec = new Phaser.Point(dude.x - game.input.mousePointer.x, dude.y - game.input.mousePointer.y);
+            vec = vec.normalize();
+
+            rocketController.CreateRocket({x: dude.x, y: dude.y}, vec);
+
+            this.timers.SetTimer('rocket_rest', 600);
+        }
     }, this);
 };
 

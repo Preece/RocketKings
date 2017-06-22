@@ -51,6 +51,8 @@ Dude.prototype.preStateUpdate = function() {
 
 Dude.prototype.postStateUpdate = function() {
 
+    this.body.velocity.x = game.math.clamp(this.body.velocity.x, -400, 400);
+    this.body.velocity.x = game.math.clamp(this.body.velocity.x, -400, 400);
 };
 
 Dude.prototype.update = function() {
@@ -127,7 +129,7 @@ Dude.prototype.Recoil = function(vec) {
     vec.setMagnitude(150);
 
     if(this.body.velocity.y > 0) {
-        this.body.velocity.y = 0;
+        //this.body.velocity.y /= 2;
     }
     this.body.velocity.x += vec.x;
     this.body.velocity.y += vec.y;
