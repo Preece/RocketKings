@@ -29,7 +29,7 @@ Rocket.prototype.Launch = function(vec) {
 	this.body.velocity.x = this.xVel;
 	this.body.velocity.y = this.yVel;
 
-	//this.rotation = Math.atan2(vec.x, vec.y);
+	this.rotation = Math.atan2(this.yVel, this.xVel);
 };
 
 Rocket.prototype.Collide = function(body, bodyB, shapeA, shapeB, equation) {

@@ -109,8 +109,6 @@ Dude.prototype.PushBack = function(source) {
     vec = vec.normalize();
 
     var force = game.math.catmullRomInterpolation([1, 0.9, 0.75, 0.6, 0.5], game.math.clamp(dist / 200, 0, 1));
-    
-    console.log(force);
 
     vec.setMagnitude(force * 300);
 
