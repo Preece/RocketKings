@@ -51,6 +51,8 @@ Dude.prototype.preStateUpdate = function() {
 
 Dude.prototype.postStateUpdate = function() {
 
+    this.body.velocity.x = game.math.clamp(this.body.velocity.x, -400, 400);
+    this.body.velocity.x = game.math.clamp(this.body.velocity.x, -400, 400);
 };
 
 Dude.prototype.update = function() {
@@ -108,18 +110,29 @@ Dude.prototype.PushBack = function(source) {
     var dist = vec.getMagnitude();
     vec = vec.normalize();
 
-    var force = game.math.catmullRomInterpolation([1, 0.9, 0.65, 0.4, 0.3], game.math.clamp(dist / 200, 0, 1));
-    
-    console.log(force);
+    var force = game.math.catmullRomInterpolation([1, 0.9, 0.75, 0.6, 0.5], game.math.clamp(dist / 200, 0, 1));
 
-    vec.setMagnitude(force * 500);
+    vec.setMagnitude(force * 300);
 
-    if(dist < 100) {
+    if(dist < 200) {
         //vec.setMagnitude(400);
+        if(this.body.velocity.y > 0) {
+            this.body.velocity.y = 0;
+        }
         this.body.velocity.x += vec.x;
         this.body.velocity.y += vec.y;
     }
 
+};
+
+Dude.prototype.Recoil = function(vec) {
+    vec.setMagnitude(150);
+
+    if(this.body.velocity.y > 0) {
+        //this.body.velocity.y /= 2;
+    }
+    this.body.velocity.x += vec.x;
+    this.body.velocity.y += vec.y;
 };
 
 
