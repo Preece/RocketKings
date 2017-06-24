@@ -19,21 +19,40 @@
           world, boxBody, planeBody;
 
       init();
-      let boxes = []; 
-      function init(){
+      let players = {};
+      let id = -1; 
+      sendKey = (key, value)=>{
+        console.log("emitting ", key, value); 
+        if(key === "A"){
+            socket.emit("dude_input", {left: value, id})
+        }
+        if(key === "D"){
+            socket.emit("dude_input", {right: value, id})
+        }
+      };
+        document.addEventListener("keydown",(event)=>{
+            sendKey(String.fromCharCode(event.keyCode), true);
+        }, false); 
+        document.addEventListener("keyup",(event)=>{
+            sendKey(String.fromCharCode(event.keyCode), false);
+        }, false); 
 
-        // Init canvas
-        canvas = document.getElementById("myCanvas");
-        w = canvas.width;
-        h = canvas.height;
 
-        ctx = canvas.getContext("2d");
-        ctx.lineWidth = 0.05;
-      }
+        function init(){
+
+            // Init canvas
+            canvas = document.getElementById("myCanvas");
+            w = canvas.width;
+            h = canvas.height;
+
+
+            ctx = canvas.getContext("2d");
+            ctx.lineWidth = 0.05;
+        }   
 
       function drawbox(x,y, width, height){
         y = h - y; 
-        ctx.rect(100 + x,y - height, width , height); 
+        ctx.rect(x, y , width , height); 
         ctx.fill(); 
         /*ctx.beginPath();
         ctx.save();
@@ -57,22 +76,20 @@
         ctx.setTransform(1, 0, 0, 1, 0, 0);
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         ctx.restore();
-        boxes.forEach((box)=> drawbox(box.x, box.y, box.width, box.height));
+        for(let key in players){
+            pos = players[key].position;
+            drawbox(pos[0], pos[1],10, 10); 
+        }
         drawPlane(2); 
-        console.log('rendering', boxes); 
-        // Transform the canvas
-        // Note that we need to flip the y axis since Canvas pixel coordinates
-        // goes from top to bottom, while physics does the opposite.
-        //ctx.translate(w/2, h/2);  // Translate to the center
-        //ctx.scale(50, -50);       // Zoom in and flip y axis
-
-        // Restore transform
+        drawbox(50, 103,10,10);
       }
-    socket.on('p2', (data)=>{
-            data.forEach((box)=> Object.keys(box).forEach((key)=>box[key]*=scale));
-            boxes = data; 
-            render();   
+    socket.on('truth', (state)=>{
+        players = state.players; 
+        render();   
     }); 
+    socket.on('dude_connect', (dudeID)=>{
+        id = dudeID; 
+    });
     render();
     </script>
 

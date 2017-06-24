@@ -8,6 +8,9 @@
     };
     
     return {
+        getState: (key, time)=>{
+            
+        },
         saveState: (state)=>{
             buffer[head++] = state; 
             head = (head >= buffer.length) ? 0 : head; 

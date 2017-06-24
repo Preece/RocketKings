@@ -4,8 +4,6 @@ const server = require('http').createServer(app);
 const io = require('socket.io')(server);
 require('./room')(io);
 require('./world');
-require('./physicsSandbox')(io); 
-console.log('sandbox');
     
 /*
 io.on('connection', (socket)=> {
