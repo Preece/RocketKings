@@ -1,49 +1,43 @@
-let config = Object.assign({}, require('./public/Src/config.js')); 
+const config = Object.assign({}, require('./public/Src/config.js')); 
 config.pxmKeys.forEach((key)=>config[key] = config[key]*config.pxm); 
-let {jumpPower: jumpPower, runSpeed: runSpeed} = config; 
+const {jumpPower, strafeSpeed, airStrafeSpeed} = config; 
+const {sum} = require('./Util'); 
 
-const checkOnGround = (p2, world, body)=>{
-    var yAxis = p2.vec2.fromValues(0, 1);
-    var result = false;
-
-    for (var i = 0; i < world.narrowphase.contactEquations.length; i++)
-    {
-        var c = world.narrowphase.contactEquations[i];
-
-        if (c.bodyA === body || c.bodyB === body)
-        {
-            var d = p2.vec2.dot(c.normalA, yAxis); // Normal dot Y-axis
-            if (c.bodyA === body) d *= -1;
-            if (d > 0.5) result = true;
-        }
-    }
-    
-    return result;
-};
-const setVelocities = (inputs, body)=>{
-    if(inputs.jump && inputs.onGround){
+const setVelocities = (inputs, body, timestep)=>{
+    if(inputs.jump && body.isOn){
+        body.velocity = sum(body.prevPosition, body.position, (a,b)=>(b - a) / timestep);
         body.velocity[1] = jumpPower;
+        body.isDirty = true; 
     }
     if(inputs.left && !inputs.right){
-        body.velocity[0] = runSpeed;
+        if(body.isOn){
+            body.impulses.push([-strafeSpeed, 0]);
+        }else{
+            body.impulses.push([-airStrafeSpeed, 0]);
+        }
     }
     if(inputs.right && !inputs.left){
-        body.velocity[0] = runSpeed;
+        if(body.isOn){
+            body.impulses.push([strafeSpeed, 0]);
+        }else{
+            body.impulses.push([airStrafeSpeed, 0]); 
+        }
     }
 };
 const parseInput = (input, state)=>{
     let key = ''; 
-    if(input.jump){
+    if(input.jump !== undefined){
         key = 'jump'; 
     }
-    if(input.left){
+    if(input.left !== undefined){
         key = 'left';
     }
-    if(input.right){
+    if(input.right !== undefined){
         key = 'right';
     }
-    state.players[input.id].inputs[key] = input[key]; 
-    console.log('parsing', state.players[input.id].inputs);
+    if(key){
+        state.players[input.id].inputs[key] = input[key];
+    }
 };
 const addPlayer = (id, body, state)=>{
     state.players[id] = {
@@ -58,9 +52,6 @@ const addRocket = (id, body, state)=>{
 };
 const removeRocket = (id, state)=>{
     delete state.rockets[id];
-};
-const setOnGround = (id, value, state)=>{
-    state.players[id].onGround = value; 
 };
 const forPlayers = (cb, state, result = {})=>{
     for(key in state.players){
@@ -85,18 +76,11 @@ const serializeBody = (id, body)=>{
         velocity: body.velocity
     };
 };
-const create = ()=>{
+const createState = ()=>{
     return {
         players: {},
         rockets: {}
     };
-};
-const createBox = (x, y, width, height, p2, world)=>{
-    let shape = new p2.Box({width: width, height: height});
-    let body = new p2.Body({mass:1, position: [x,y]});
-    body.addShape(shape);
-    world.addBody(body); 
-    return body;
 };
 
 const createPlane = (y, p2, world)=>{
@@ -109,18 +93,14 @@ const createPlane = (y, p2, world)=>{
 
 
 module.exports = {
-    create,
+    createState,
     serializeBody,
     forBody,
     forRockets,
     forPlayers,
-    setOnGround,
-    checkOnGround,
     setVelocities,
     parseInput,
     addPlayer,
     addRocket,
-    removeRocket, 
-    createPlane, 
-    createBox
+    removeRocket
 };

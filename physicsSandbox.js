@@ -1,31 +1,43 @@
 module.exports = (io, room)=> {
-    _ = require('underscore'); 
-    p2 = require('p2');
-    let config = Object.assign({}, require('./public/Src/config.js')); 
-    config.pxmKeys.forEach((key)=>config[key] = config[key]*config.pxm); 
-    let startPos = config.startPos; 
+    const _ = require('underscore'); 
+    const p2 = require('p2');
+    const physics = require('./physics'); 
+
+    const config = require('./public/Src/config.js'); 
+    const pxmConfig = {}; 
+    const applyPXM = (value, pxm)=>{
+        if(Array.isArray(value)){
+            return value.map((ele)=>applyPXM(ele, pxm));
+        }else{
+            return value * pxm; 
+        }
+    };
+    config.pxmKeys.forEach((key)=>{
+        const result = applyPXM(config[key], config.pxm);
+        pxmConfig[key] = result; 
+    }); 
 
     let objID = 0; 
     const timestep = 1/60; 
     let uncalcdTime = 0; 
     let frameNum = 0; 
-    const world = new p2.World({gravity:[0,-9.82]}); 
-    world.defaultContactMaterial.restitution = 0; 
-    world.defaultContactMaterial.friction = 0.5;
-    world.setGlobalStiffness(1e5);
 
-
-    let setup = require('./levelSetup');
-    let bounds = setup.createBounds(config.width, config.height, world, p2);
 
     let actions = require('./gameState'); 
-    const state = actions.create(); 
+    const state = actions.createState(); 
+    const world = physics.createWorld({
+        boundsMaxX: config.width,
+        boundsMaxY: config.height,
+    }); 
 
+    pxmConfig.platforms.forEach((platform)=>{
+        let [x, y, width, height] = platform; 
+        physics.createBody({x, y, width, height, mass: 0}, world);
+    });
 
-    const updateState = (actions, state)=>{
+    const updateState = (actions, timestep, state)=>{
         actions.forPlayers((id, player)=>{
-            player.inputs.onGround = actions.checkOnGround(p2, world, player.body); 
-            actions.setVelocities(player.inputs, player.body); 
+            actions.setVelocities(player.inputs, player.body, timestep  ); 
         }, state); 
     };
     const serializeState = (state)=>{
@@ -52,8 +64,8 @@ module.exports = (io, room)=> {
         delta = now - lastFrame; 
         uncalcdTime += delta / 1000;
         if(uncalcdTime > timestep){
-            updateState(actions, state);
-            world.step(timestep);
+            updateState(actions, timestep, state);
+            physics.step(timestep, world);
             frameNum++;
             uncalcdTime -= timestep;
             io.to(room.id).emit('truth', serializeState(state));
@@ -67,11 +79,15 @@ module.exports = (io, room)=> {
     return {
         connectSocket: (socket)=>{
             const id = socket.dudeID; 
-            actions.addPlayer(getID(),
-                actions.createBox(config.startPos[id][0], config.startPos[id][1],1,1, p2, world),
-                state);
-            socket.on('dude_input', (input)=>{
-                console.log(state, input); 
+            const body = physics.createBody({
+                x: pxmConfig.startPos[id][0],
+                y: pxmConfig.startPos[id][1],
+                width: 1,
+                height: 1,
+                mass: 1
+            }, world);
+            actions.addPlayer(getID(), body, state);
+            socket.on('dude_input', (input)=>{  
                 actions.parseInput(input, state); 
             });
         }

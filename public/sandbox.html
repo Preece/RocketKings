@@ -23,18 +23,21 @@
       let id = -1; 
       sendKey = (key, value)=>{
         console.log("emitting ", key, value); 
-        if(key === "A"){
+        if(key === "a"){
             socket.emit("dude_input", {left: value, id})
         }
-        if(key === "D"){
+        if(key === "d"){
             socket.emit("dude_input", {right: value, id})
+        }
+        if(key === " "){
+            socket.emit("dude_input", {jump: value, id})
         }
       };
         document.addEventListener("keydown",(event)=>{
-            sendKey(String.fromCharCode(event.keyCode), true);
+            sendKey((event.key), true);
         }, false); 
         document.addEventListener("keyup",(event)=>{
-            sendKey(String.fromCharCode(event.keyCode), false);
+            sendKey(event.key, false);
         }, false); 
 
 
@@ -78,10 +81,11 @@
         ctx.restore();
         for(let key in players){
             pos = players[key].position;
-            drawbox(pos[0], pos[1],10, 10); 
+            drawbox(pos[0] * scale, pos[1] * scale,10, 10); 
         }
         drawPlane(2); 
         drawbox(50, 103,10,10);
+        drawbox(200, 25, 60,25); 
       }
     socket.on('truth', (state)=>{
         players = state.players; 

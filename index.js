@@ -4,7 +4,7 @@ const server = require('http').createServer(app);
 const io = require('socket.io')(server);
 require('./room')(io);
 require('./world');
-    
+require('./physics');     
 /*
 io.on('connection', (socket)=> {
     console.log("Connceted");

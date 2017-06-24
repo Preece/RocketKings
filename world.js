@@ -10,11 +10,16 @@ module.exports = {
 		var that = this;
 
 		var world = new p2.World({
-	        gravity: [0, -80]
+	        gravity: [0, -10]
 	    });
 
-	    world.defaultContactMaterial.friction = 0.5;
-	    world.setGlobalStiffness(1e5);
+		Object.assign(world.defaultContactMaterial, {
+			friction: 0.3,
+			restitution: 0,
+			stiffness: 1000000,
+			relaxation: 4,
+		});
+
 
 	    planeShape = new p2.Plane();
 	    planeBody = new p2.Body({
