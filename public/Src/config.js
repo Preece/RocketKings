@@ -4,7 +4,7 @@
         pxm: 1/20,
         pxmKeys: ['jumpPower', 'strafeSpeed', 'airStrafeSpeed', 'width', 
         'height', 'gravity', 'startPos', 'platforms'],//put key values for properties that need to be mulitplied by pixel to meter conversion
-        jumpPower: 150,
+        jumpPower: 250,
         strafeSpeed: 200,
         airStrafeSpeed: 100,
         width: 640,
@@ -13,7 +13,7 @@
             [50, 200],
             [250, 200]
         ],
-        gravity: [0,-40],
+        gravity: [0,-800],
         platforms: [
             [225,0,50,50]
         ]

@@ -28,6 +28,7 @@ module.exports = (io, room)=> {
     const world = physics.createWorld({
         boundsMaxX: config.width,
         boundsMaxY: config.height,
+        gravity: pxmConfig.gravity
     }); 
 
     pxmConfig.platforms.forEach((platform)=>{
@@ -84,7 +85,8 @@ module.exports = (io, room)=> {
                 y: pxmConfig.startPos[id][1],
                 width: 1,
                 height: 1,
-                mass: 1
+                mass: 1,
+                collPriority: 1
             }, world);
             actions.addPlayer(getID(), body, state);
             socket.on('dude_input', (input)=>{  

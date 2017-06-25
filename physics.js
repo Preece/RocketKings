@@ -5,40 +5,34 @@ const {sum} = require('./Util');
 //How will on collision work speciifically? 
 //isOn needs to be thought out more.
 //checkBounds, minY has some hard coded removal of intertia.
-const checkBounds = (body, state)=>{
+
+const checkBounds = (body, world)=>{
     let {position:[posX, posY], extents: [extX, extY]} = body;
-    let {boundsMinX: minX, boundsMinY: minY, boundsMaxX: maxX, boundsMaxY: maxY} = state;
-    let result = [0,0];
-    let collided = false;
+    let {boundsMinX: minX, boundsMinY: minY, boundsMaxX: maxX, boundsMaxY: maxY} = world;
     if((posX - extX) < minX){
-        collided = true; 
-        result[0] = -(posX - extX - minX);
-        body.onCollision(state.boundsObj, [minX, posY]); 
-        body.velocity[0] = 0; 
+       onCollision(body, null,{
+        axis: 0,
+        offset: -(posX - extX - minX)
+       });
     }
     if((posX + extX) > maxX){
-        collided = true; 
-        result[0] = -(posX + extX - maxX);
-        body.onCollision(state.boundsObj, [maxX, posY]); 
-        body.velocity[0] = 0; 
+        onCollision(body, null, {
+            axis: 0,
+            offset:-(posX + extX - maxX)
+        });
     }
     if((posY - extY) < minY){
-        collided = true; 
-        result[1] = -(posY - extY - minY);
-        body.isOn = state.groundPlane; 
-        body.onCollision(state.groundPlane, [posX, minY]); 
-        body.velocity = [0,0]; 
+        onCollision(body, world.groundPlane, {
+            axis: 1,
+            offset: -(posY - extY - minY)
+        }, world);
     }
     if((posY + extY) > maxY){
-        collided = true; 
-        result[1] = -(posY + extY - maxY); 
-        body.onCollision(state.boundsObj, [posX, maxY]); 
-        body.velocity[1] = 0; 
+        onCollision(body, null, {
+            axis: 1,
+            offset:-(posY + extY - maxY)
+        });
     }
-    if(collided){
-        return result; 
-    }
-    return null; 
 };
 
 const createBody = (options, world)=>{
@@ -56,18 +50,42 @@ const createBody = (options, world)=>{
         width: body.extents[0] = 1,
         height: body.extents[1] = 1,
         useGravity: body.useGravity = true,
-        onCollision: body.onCollision = ()=>{},
+        collPriority: body.collPriority = 0,
         mass: body.mass = 0
     } = options); 
     body.prevPosition = body.position; 
     body.extents = _.map(body.extents, (extent)=> extent/2);
     updateAABB(body); 
+    body.prevMin = body.min;
+    body.prevMax = body.max; 
     if(world){
         addBody(body, world);  
     }
     return body; 
 };
+const playerColl = (body, collBody, contact, world)=>{
+    body.velocity[contact.axis] = 0; 
+    body.position[contact.axis] += contact.offset; 
+    if(contact.axis === 1 && body && body.position[1] > collBody.position[1]){
+        body.isOn = collBody; 
+    }
+    updateAABB(body); 
+};
+
+const staticColl = ()=>{};
+const onCollision = (bodyA, bodyB, contact, world)=>{
+    collisionRouter[bodyA.collPriority](bodyA, bodyB, contact, world); 
+    if(bodyB && bodyB.collPriority){
+        collisionRouter[bodyB.collPriority](bodyB, bodyA, contact, world); 
+    }
+};
+const collisionRouter =[
+    staticColl,
+    playerColl
+];
 const updateAABB = (body)=>{
+    body.prevMin = body.min;
+    body.prevMax = body.max;
     body.min = [body.position[0] - body.extents[0],
         body.position[1] - body.extents[1]]; 
     body.max = [body.position[0] + body.extents[0],
@@ -75,7 +93,6 @@ const updateAABB = (body)=>{
 };
 const createWorld = (options = {})=>{
     let state = {}; 
-    state.groundPlane = {isGround: true, isBounds: true};
     state.boundsObj = {isBounds: true};
     ({
         gravity: state.gravity = [0,-10],
@@ -85,6 +102,10 @@ const createWorld = (options = {})=>{
         boundsMaxY: state.boundsMaxY = 100,
         gridSize: state.gridSize = 10,
     } = options); 
+    state.groundPlane = {
+        isGroundplane: true, 
+        position:[0,state.boundsMinY]
+    };
     state.bodies = [];
     state.dynamicBodies = []; 
     state._uniqID = 0; 
@@ -93,8 +114,15 @@ const createWorld = (options = {})=>{
 const step = (step, world)=>{
     _.each(world.dynamicBodies, (body)=>{
         body.prevPosition = body.position; 
+        if(body.isOn){
+            body.isDirty = body.isDirty || isOffFloor(body, body.isOn);
+        }
         if(body.isDirty){
             body.isOn = false; 
+            body.isDirty = false; 
+        }
+        if(body.isOn){
+            body.velocity = [0,0]; 
         }
         if(body.useGravity && !body.isOn){
             body.velocity = sum(body.velocity, world.gravity, (vel, grav)=> vel + grav * step);
@@ -104,10 +132,7 @@ const step = (step, world)=>{
             body.position = sum(body.position, impulse, (pos, imp)=> pos + imp * step); 
         });
         body.impulses.length = 0; 
-        let coll = checkBounds(body, world);
-        if(coll !== null){
-            body.position = sum(body.position, coll, (a,b)=>a + b); 
-        }
+        checkBounds(body, world);
     });
     collisionCheck(world);
 };
@@ -126,31 +151,31 @@ const collisionCheck = (world)=>{
             if(dBody.id !== collBody.id && !dBody.bodiesChecked[collBody.id]){
                 if(dBody.min[0] < collBody.max[0] && dBody.max[0] > collBody.min[0] &&
                     dBody.min[1] < collBody.max[1] && dBody.max[1] > collBody.min[1]){
-                    //create the overlap volume
-                    const collMin = [Math.max(dBody.min[0], collBody.min[0]),
-                        Math.max(dBody.min[1], collBody.min[1])];
-                    const collMax = [Math.min(dBody.max[0], collBody.max[0]),
-                        Math.min(dBody.max[1], collBody.max[1])];
-                    //get the difference in velocities
-                    let velDiff =sum(
-                        sum(dBody.position, dBody.prevPosition, (a,b)=> a - b),
-                        sum(collBody.position, dBody.prevPosition, (a,b)=> a - b),
-                        (a, b)=> a-b);
 
+                    let debug = (collBody !== world.groundPlane)? true : false; 
+                    const contact = axisAABBIntersect(dBody, collBody, debug); 
+                    if(contact){
+                        onCollision(dBody, collBody, contact, debug);
+                    } 
+                }
+            }
+        });
+    });
+};
+                    /*
                     let contact = rayAABBIntersection(collMin, collMax, velDiff);
                     if(contact.axis === 0){
                         const mod = (dBody.position[0] < dBody.prevPosition[0])? 1 : -1;
-                        dBody.velocity[0] = 0;
+                        //dBody.velocity[0] = 0;
                         dBody.position[0] = contact.point[0] + dBody.extents[0] * mod; 
                     }else{
-                        dBody.velocity[1] = 0; 
+                        //dBody.velocity[1] = 0; 
                         const mod = (dBody.position[1] < dBody.prevPosition[1])? 1 : -1;
                         dBody.position[1] = contact.point[1] + dBody.extents[1] * mod; 
                         if(dBody.position[1] > collBody.position[1]){
                             dBody.isOn = collBody; 
                         }
                     }
-                    console.log(dBody.position); 
                     dBody.onCollision(collBody, contact.point); 
                     //collided with a dynamic body
                     if(collBody.mass > 0){
@@ -164,12 +189,44 @@ const collisionCheck = (world)=>{
                                 collBody.isOn = dBody;
                             }
                         }
-                    }
-                }
-            }
-        });
-    });
+                        */
+
+
+/*
+//create the overlap volume
+    const collMin = [Math.max(dBody.min[0], collBody.min[0]),
+        Math.max(dBody.min[1], collBody.min[1])];
+    const collMax = [Math.min(dBody.max[0], collBody.max[0]),
+        Math.min(dBody.max[1], collBody.max[1])];
+    //get the difference in velocities
+    let velDiff =sum(
+        sum(dBody.position, dBody.prevPosition, (a,b)=> a - b),
+        sum(collBody.position, dBody.prevPosition, (a,b)=> a - b),
+        (a, b)=> a-b);
+*/
+
+//pMinA = previous minimum values for object A
+const axisAABBIntersect = (bodyA, bodyB, debug)=>{
+    if(bodyA.prevMin[0] < bodyB.prevMax[0] && bodyB.prevMin[0] < bodyA.prevMax[0]){
+        const offset = (bodyA.position[1] > bodyB.position[1])? 
+            bodyB.max[1] - bodyA.min[1] : bodyA.max[1] - bodyB.min[1];
+        return {
+            axis: 1,
+            offset
+        };
+    }else if(bodyA.prevMin[1] < bodyB.prevMax[1] && bodyB.prevMin[1] < bodyA.prevMax[1]){
+        const offset = (bodyA.position[0] > bodyB.position[0])? 
+            bodyB.max[0] - bodyA.min[0]: bodyB.min[0] - bodyA.max[0];
+        return {
+            axis: 0,
+            offset
+        };
+    }
 };
+const isOffFloor = (body, floor)=>{
+    return !floor.isGroundplane && 
+    (body.min[0] > floor.max[0] || body.max[0] < floor.min[0])
+}
 
 const rayAABBIntersection = (min, max, dir)=>{
     const result = {}; 
@@ -179,9 +236,6 @@ const rayAABBIntersection = (min, max, dir)=>{
     const yPlane = (dir[1] > 0) ? max[1] : min[1]; 
     const xDist = dir[0] / (xPlane - origin[0]);
     const yDist = dir[1] / (yPlane - origin[1]);
-    console.log(min, max); 
-    console.log(xPlane, yPlane);  
-    console.log(xDist, yDist); 
     if(xDist < yDist){
         result.axis = 0; 
         result.point = [dir[0] / xDist + origin[0], dir[1] / xDist + origin[1]];
@@ -199,6 +253,8 @@ const addBody = (body, world)=>{
     }
     body.id = world._uniqID++; 
 };
+
+
 
 module.exports = {
     createWorld,
