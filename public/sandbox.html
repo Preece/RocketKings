@@ -55,7 +55,7 @@
 
       function drawbox(x,y, width, height){
         y = h - y; 
-        ctx.rect(x, y , width , height); 
+        ctx.rect(x - scale / 2 , y - scale / 2, width , height); 
         ctx.fill(); 
         /*ctx.beginPath();
         ctx.save();
@@ -81,11 +81,10 @@
         ctx.restore();
         for(let key in players){
             pos = players[key].position;
-            drawbox(pos[0] * scale, pos[1] * scale,10, 10); 
+            drawbox(pos[0] * scale, pos[1] * scale, scale, scale); 
         }
         drawPlane(2); 
-        drawbox(50, 103,10,10);
-        drawbox(200, 25, 60,25); 
+        drawbox(210, 15, 50, 25); 
       }
     socket.on('truth', (state)=>{
         players = state.players; 

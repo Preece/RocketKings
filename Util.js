@@ -27,6 +27,8 @@ Queue.prototype.peek = function(){
 const QNode = (value)=>{
     this.value = value; 
 };
+
+
 const sum = (arr1, arr2, cb)=>{
     if(arr2 === undefined){
         return arr1; 
@@ -40,7 +42,18 @@ const sum = (arr1, arr2, cb)=>{
     }
     return result; 
 };
+
+
+const normalize = (vec)=>{
+    const magSqr = vec.reduce((total, next)=> next * next + total, 0); 
+    const mag = Math.sqrt(mag); 
+    return vec.map((val)=> val / mag); 
+};
+
+
+
 module.exports = {
     Queue,
-    sum
+    sum,
+    normalize
 };

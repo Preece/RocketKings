@@ -86,7 +86,7 @@ module.exports = (io, room)=> {
                 width: 1,
                 height: 1,
                 mass: 1,
-                collPriority: 1
+                isPlayer: true,
             }, world);
             actions.addPlayer(getID(), body, state);
             socket.on('dude_input', (input)=>{  
