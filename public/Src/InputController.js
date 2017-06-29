@@ -75,12 +75,9 @@ InputController = function() {
 
     game.input.onDown.add(function(e) {
         //console.log(e);
-        var rot = Math.atan2();
+        // var rot = Math.atan2();
 
-        var vec = new Phaser.Point(dude.x - game.input.mousePointer.x, dude.y - game.input.mousePointer.y);
-        vec = vec.normalize();
-
-        rocketController.CreateRocket({x: dude.x, y: dude.y}, vec);
+        events.publish('input_mouse', {x: game.input.mousePointer.x, y: game.input.mousePointer.y});
     }, this);
 };
 

@@ -1,5 +1,23 @@
 RocketController = function() {
 
+	events.subscribe('shoot_rocket', function(params) {
+		var source = dude;
+
+		console.log(params.ownerId, dude.id);
+
+		if(!!dude && params.ownerId === dude.id) {
+			source = dude;
+		} else if(!!bro && params.ownerId === bro.id) {
+			source = bro;
+		} else {
+			console.log('Unknown rocket origin: ' + params.ownerId);
+		}
+
+		var vec = new Phaser.Point(source.x - params.x, source.y - params.y);
+        vec = vec.normalize();
+
+        rocketController.CreateRocket({x: source.x, y: source.y}, vec);
+	}, this);
 };
 
 RocketController.prototype.CreateRocket = function(orig, vec) {
