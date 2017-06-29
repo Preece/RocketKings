@@ -12,7 +12,7 @@ NetworkController = function() {
 		console.log('Bro Connected:', resp);  
 
 		//spawn bro
-		//bro = Main.spawnDude(resp);
+		bro = Main.spawnDude(resp);
 	});
 
 	this.socket.on('physics_update', function(resp) {
