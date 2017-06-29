@@ -34,13 +34,21 @@ Rocket.prototype.Launch = function(vec) {
 
 Rocket.prototype.Collide = function(body, bodyB, shapeA, shapeB, equation) {
 
-	if(body === null) {
+	//console.log(body.sprite.id, this.owningDude);
+
+
+
+	if(body === null || body.sprite.id !== this.owningDude) {
 	    this.pendingDestroy = true;
 	    effectsController.Explosion(this.body);
 
 	    //knock back the dude and the bro when it explodes
 	    if(!!dude) {
 	    	dude.PushBack(this.body);
+	    }
+
+	    if(!!bro) {
+	    	bro.PushBack(this.body);
 	    }
 		
 	}

@@ -41,7 +41,6 @@ NetworkController = function() {
 
     //use the servers response to the inputs to update the dudes
     this.socket.on('truth', function(truth) {
-		console.log('Truth:', truth);
 
 		if(truth.jump !== undefined) {
 			events.publish('dude_jump', {id: truth.id, jump: truth.jump});

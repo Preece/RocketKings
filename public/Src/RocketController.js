@@ -3,13 +3,10 @@ RocketController = function() {
 	events.subscribe('shoot_rocket', function(params) {
 		var source = dude;
 
-
         if(!!dude && params.ownerId === dude.id) {
             source = dude;
-            console.log('coming from da dude');
         } else if(!!bro && params.ownerId === bro.id) {
             source = bro;
-            console.log('coming from da bro');
 		} else {
 			console.log('Unknown rocket origin: ' + params.ownerId, 'Bro: ' + bro.id, 'Dude: ' + dude.id);
 		}
@@ -17,11 +14,11 @@ RocketController = function() {
 		var vec = new Phaser.Point(source.x - params.x, source.y - params.y);
         vec = vec.normalize();
 
-        rocketController.CreateRocket({x: source.x, y: source.y}, vec);
+        rocketController.CreateRocket(source, {x: source.x, y: source.y}, vec);
 	}, this);
 };
 
-RocketController.prototype.CreateRocket = function(orig, vec) {
+RocketController.prototype.CreateRocket = function(src, orig, vec) {
 
 	var rocket = new Rocket(game, orig.x - (30 * vec.x), orig.y - (30 * vec.y), 'Dude');
 	game.add.existing(rocket);
@@ -37,8 +34,8 @@ RocketController.prototype.CreateRocket = function(orig, vec) {
     rocket.body.data.gravityScale = 0;
     rocket.body.onBeginContact.add(rocket.Collide, rocket);
 
-    rocket.body.owningDude = dude.id;
+    rocket.owningDude = src.id;
 
 	rocket.Launch(vec);
-    dude.Recoil(vec);
+    src.Recoil(vec);
 };
