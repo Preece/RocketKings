@@ -26,7 +26,7 @@ RocketController.prototype.CreateRocket = function(orig, vec) {
 	game.add.existing(rocket);
 
 	game.physics.p2.enable(rocket, DEBUG_MODE);
-    rocket.body.setRectangle(20, 20, 0, 0);
+    rocket.body.setRectangle(40, 20, 0, 0);
 
     rocket.body.collideWorldBounds = true;
     //rocket.body.setZeroDamping();
@@ -39,4 +39,5 @@ RocketController.prototype.CreateRocket = function(orig, vec) {
     rocket.body.owningDude = dude.id;
 
 	rocket.Launch(vec);
+    dude.Recoil(vec);
 };
