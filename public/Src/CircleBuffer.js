@@ -1,4 +1,4 @@
-()=>{
+
     const buffer = new Array(100); 
     let tail, head, pointer = 0; 
 
@@ -7,7 +7,7 @@
                  .every((key)=> truth[key] == chunk[key]);
     };
     
-    return {
+    module.exports =  {
         getState: (key, time)=>{
             
         },
@@ -35,5 +35,3 @@
             }while(pointer != tail);
         }
     };
-
-}();    
