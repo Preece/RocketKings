@@ -1,7 +1,8 @@
 module.exports = (io, room)=> {
     const _ = require('underscore'); 
     const p2 = require('p2');
-    const physics = require('./physics'); 
+    const physics = require('./public/Src/physics'); 
+    let actions = require('./public/Src/gameState'); 
 
     const config = require('./public/Src/config.js'); 
     const pxmConfig = {}; 
@@ -23,7 +24,6 @@ module.exports = (io, room)=> {
     let frameNum = 0; 
 
 
-    let actions = require('./gameState'); 
     const state = actions.createState(); 
     const world = physics.createWorld({
         boundsMaxX: config.width,

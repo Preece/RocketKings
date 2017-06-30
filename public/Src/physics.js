@@ -1,5 +1,6 @@
-const _ = require('underscore'); 
-const {sum} = require('./Util'); 
+(()=> {
+const _ = (window)? window._ : require('underscore'); 
+const {sum} = (window)? window.util : require('./Util'); 
 
 //Ray intersection and collisions need to updated. 
 //How will on collision work speciifically? 
@@ -287,9 +288,21 @@ const addBody = (body, world)=>{
     body.id = world._uniqID++; 
 };
 
-module.exports = {
+let returns = {
     createWorld,
     createBody,
     addBody,
     step
 };
+
+    if (typeof exports != 'undefined' && !exports.nodeType) {
+    if (typeof module != 'undefined' && !module.nodeType && module.exports) {
+      exports = module.exports = returns;
+    }
+    exports.config = returns;
+  } else {
+    window.physics = returns;
+  }
+
+
+})();

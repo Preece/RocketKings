@@ -2,9 +2,7 @@ const express = require('express');
 const app = express(); 
 const server = require('http').createServer(app);
 const io = require('socket.io')(server);
-require('./room')(io);
-require('./world');
-require('./physics');     
+require('./room')(io); 
 /*
 io.on('connection', (socket)=> {
     console.log("Connceted");
