@@ -21,7 +21,7 @@ Rocket.prototype.update = function() {
 };
 
 Rocket.prototype.Launch = function(vec) {
-	vec.setMagnitude(1200);
+	vec.setMagnitude(1500);
 
 	this.xVel = vec.x * -1;
 	this.yVel = vec.y * -1;
