@@ -49,7 +49,9 @@ const normalize = (vec)=>{
     const mag = Math.sqrt(mag); 
     return vec.map((val)=> val / mag); 
 };
-
+const magSqr = (vec)=>{
+    return vec.reduce((total, next)=> next * next + total, 0); 
+};
 
 
 module.exports = {

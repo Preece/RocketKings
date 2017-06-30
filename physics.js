@@ -51,8 +51,11 @@ const createBody = (options, world)=>{
         width: body.extents[0] = 1,
         height: body.extents[1] = 1,
         useGravity: body.useGravity = true,
-        isPlayer: body.isPlayer ,
-        mass: body.mass = 0
+        isPlayer: body.isPlayer,
+        isRocket: body.isRocket,
+        collisionCB: body.collisionCB,
+        mass: body.mass = 0,
+        id: body.id
     } = options); 
     if(body.isPlayer){
         body.collPriority = 1; 
@@ -67,10 +70,24 @@ const createBody = (options, world)=>{
     }
     return body; 
 };
-const playerColl = (body, collBody, contact)=>{
-    if(collBody && collBody.isPlayer){
-        console.log(contact);
+
+const removeBody = (body, world)=>{
+    //we replace the body we want to remove, with the last element in the list
+    //then we shrink the list by one. 
+    const dIndex = _.findWhere(world.dynamicBodies, {id: body.id});
+    if(dIndex !== undefined){
+        dLength = world.dynamicBodies.length - 1; 
+        world.dynamicBodies[dIndex] = world.dynamicBodies[dLength];
+        world.dynamicBodies.length = dLength; 
     }
+    const bIndex = _.findWhere(world.bodies, {id: body.id});
+    if(bIndex !== undefined){
+        bLength = world.bodies.length - 1; 
+        world.bodies[bIndex] = world.dynamicBodies[bLength]; 
+        world.bodies.length = bLength; 
+    }
+};
+const playerColl = (body, collBody, contact)=>{
     body.velocity[contact.axis] = 0; 
     body.position[contact.axis] += contact.offset; 
     if(contact.axis === 1 && body && body.position[1] > collBody.position[1]){
@@ -158,14 +175,23 @@ const collisionCheck = (world)=>{
     _.each(world.dynamicBodies, (dBody)=>{
         checkBounds(dBody, world);
         _.each(world.bodies, (collBody)=>{
-            //make sure the body isn't itself.
+            //make sure the body isn't itself. and making sure it hasn't collided already
             if(dBody.id !== collBody.id && !dBody.bodiesChecked[collBody.id]){
+                //making sure we don't do the same collision check twice
                 if(collBody.bodiesChecked !== undefined){
                     collBody.bodiesChecked[dBody.id]; 
                 }
                 if(dBody.min[0] < collBody.max[0] && dBody.max[0] > collBody.min[0] &&
                     dBody.min[1] < collBody.max[1] && dBody.max[1] > collBody.min[1]){
-                    if(dBody.isPlayer && collBody.isPlayer){
+                    if(dBody.isRocket || collBody.isRocket){
+                        if(dBody.isRocket){
+                            dBody.collisionCB(dBody, collBody); 
+                        }
+                        if(collBody.isRocket){
+                            collBody.collisionCB(dBody, collBody); 
+                        }
+                    }
+                    else if(dBody.isPlayer && collBody.isPlayer){
                         const contacts = dynamicCollisions(dBody, collBody); 
                         onCollision(dBody, collBody, contacts[0], contacts[1]);
                     }else{

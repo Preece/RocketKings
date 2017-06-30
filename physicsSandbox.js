@@ -80,6 +80,7 @@ module.exports = (io, room)=> {
     return {
         connectSocket: (socket)=>{
             const id = socket.dudeID; 
+            const gameID = getID(); 
             const body = physics.createBody({
                 x: pxmConfig.startPos[id][0],
                 y: pxmConfig.startPos[id][1],
@@ -87,8 +88,9 @@ module.exports = (io, room)=> {
                 height: 1,
                 mass: 1,
                 isPlayer: true,
+                id: gameID
             }, world);
-            actions.addPlayer(getID(), body, state);
+            actions.addPlayer(gameID, body, state);
             socket.on('dude_input', (input)=>{  
                 actions.parseInput(input, state); 
             });

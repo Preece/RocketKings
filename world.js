@@ -13,12 +13,6 @@ module.exports = {
 	        gravity: [0, -10]
 	    });
 
-		Object.assign(world.defaultContactMaterial, {
-			friction: 0.3,
-			restitution: 0,
-			stiffness: 1000000,
-			relaxation: 4,
-		});
 
 
 	    planeShape = new p2.Plane();

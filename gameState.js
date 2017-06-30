@@ -24,6 +24,9 @@ const setVelocities = (inputs, body, timestep)=>{
         }
     }
 };
+const applyExplosion = (rocket, state)=>{
+    
+};
 const parseInput = (input, state)=>{
     let key = ''; 
     if(input.jump !== undefined){
