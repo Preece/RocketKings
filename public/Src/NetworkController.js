@@ -1,5 +1,6 @@
 NetworkController = function() {
 	this.socket = io();
+	this.timers = new TimerUtil();
 
 	this.socket.on('dude_connect', function(resp) {
 		console.log('Dude Connected:', resp);
@@ -42,7 +43,16 @@ NetworkController = function() {
     //use the servers response to the inputs to update the dudes
     this.socket.on('truth', function(truth) {
 
-		if(truth.jump !== undefined) {
+    	if(truth.sync === true && dude.id !== 0) {
+    		
+    		// if(dude.id === 1) {
+    		// 	dude.body.x = truth.bro.x;
+    		// 	dude.body.y = truth.bro.y;
+    		// 	bro.body.x = truth.dude.x;
+    		// 	bro.body.y = truth.dude.y;
+
+    		// }
+    	} else if(truth.jump !== undefined) {
 			events.publish('dude_jump', {id: truth.id, jump: truth.jump});
 
 		} else if(truth.left !== undefined) {
@@ -61,5 +71,14 @@ NetworkController = function() {
 };
 
 NetworkController.prototype.Update = function() {
+	// if(this.timers.TimerUp('sync') && !!dude && dude.id === 0 && !!bro) {
 
+	// 	this.socket.emit('dudeInput', {
+	// 		sync: true,
+	// 		dude: { x: dude.body.x, y: dude.body.y },
+	// 		bro: { x: bro.body.x, y: bro.body.y }
+	// 	});
+
+	// 	this.timers.SetTimer('sync', 500);
+	// }
 };

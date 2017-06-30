@@ -53,6 +53,8 @@ Main.update = function() {
     // {
     //     player.body.moveDown(200);
     // }
+
+    networkController.Update();
 };
 
 Main.render = function() {
