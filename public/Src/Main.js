@@ -17,21 +17,21 @@ Main.create = function() {
 
 Main.spawnDude = function(id) {
 
-    dude = new Dude(game, 100, 100, 'Dude');
-    dude.id = id;
-    game.add.existing(dude);
+    var guy = new Dude(game, 100, 100, 'Dude');
+    guy.id = id;
+    game.add.existing(guy);
 
-    game.physics.p2.enable(dude, DEBUG_MODE);
-    dude.body.setRectangle(40, 80, -5, 0);
+    game.physics.p2.enable(guy, DEBUG_MODE);
+    guy.body.setRectangle(40, 80, -5, 0);
 
-    dude.body.collideWorldBounds = true;
-    dude.body.setZeroDamping();
-    dude.body.setZeroVelocity();
-    dude.body.fixedRotation = true;
+    guy.body.collideWorldBounds = true;
+    guy.body.setZeroDamping();
+    guy.body.setZeroVelocity();
+    guy.body.fixedRotation = true;
 
     console.log(this.worldToJSON());
 
-    return dude;
+    return guy;
 };
 
 Main.update = function() {
@@ -53,6 +53,8 @@ Main.update = function() {
     // {
     //     player.body.moveDown(200);
     // }
+
+    networkController.Update();
 };
 
 Main.render = function() {
